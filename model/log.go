@@ -2,11 +2,16 @@ package model
 
 import "time"
 
+type User struct {
+	Username string `json:"username"`
+	Id       string `json:"id,omitempty"`
+}
+
 type Log struct {
 	Timestamp time.Time   `json:"timestamp"`
 	Level     string      `json:"level"`
 	Service   string      `json:"service"`
-	User      string      `json:"user"`
+	User      User        `json:"user"`
 	Message   string      `json:"message"`
 	Request   LogRequest  `json:"request"`
 	Response  LogResponse `json:"response"`

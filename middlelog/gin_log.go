@@ -76,31 +76,57 @@ func GinLogger() gin.HandlerFunc {
 }
 
 func Debug(message string) {
-	sendMessage(message, DEBUG)
+	sendMessage(message, DEBUG, nil)
 }
 
 func Warn(message string) {
-	sendMessage(message, WARN)
+	sendMessage(message, WARN, nil)
 }
 
 func Error(message string) {
-	sendMessage(message, ERROR)
+	sendMessage(message, ERROR, nil)
 }
 
 func Fatal(message string) {
-	sendMessage(message, FATAL)
+	sendMessage(message, FATAL, nil)
 }
 
 func Info(message string) {
-	sendMessage(message, INFO)
+	sendMessage(message, INFO, nil)
 }
 
-func sendMessage(message, level string) {
+func DebugWithUser(message string, user *model.User) {
+	sendMessage(message, DEBUG, user)
+}
+
+func WarnWithUser(message string, user *model.User) {
+	sendMessage(message, WARN, user)
+}
+
+func ErrorWithUser(message string, user *model.User) {
+	sendMessage(message, ERROR, user)
+}
+
+func FatalWithUser(message string, user *model.User) {
+	sendMessage(message, FATAL, user)
+}
+
+func InfoWithUser(message string, user *model.User) {
+	sendMessage(message, INFO, user)
+}
+
+func sendMessage(message, level string, user *model.User) {
+	var logUser model.User
+	if user == nil {
+		logUser = model.User{}
+	} else {
+		logUser = *user
+	}
 	register := model.Log{
 		Timestamp: time.Now(),
 		Level:     level,
 		Service:   os.Getenv("SERVICE_NAME"),
-		User:      "",
+		User:      logUser,
 		Message:   message,
 	}
 	body, _ := json.Marshal(register)
