@@ -51,15 +51,19 @@ func GinLogger() gin.HandlerFunc {
 		t := time.Now()
 		context.Next()
 		var body any
-		if err := json.NewDecoder(context.Request.Body).Decode(&body); err != nil {
-			log.Println(err)
-			return
+		_ = json.NewDecoder(context.Request.Body).Decode(&body)
+		user := model.User{
+			Username:   context.GetHeader("X-Usuario-Nombre"),
+			Id:         context.GetHeader("X-Usuario-Id"),
+			Sucursal:   context.GetHeader("X-Sucursal-Nombre"),
+			SucursalId: context.GetHeader("X-Sucursal-Id"),
 		}
 		register := model.Log{
 			Timestamp: time.Now(),
 			Message:   "request",
 			Level:     logLevel(context.Writer.Status()),
 			Service:   os.Getenv("SERVICE_NAME"),
+			User:      user,
 			Request: model.LogRequest{
 				Method: context.Request.Method,
 				Body:   body,

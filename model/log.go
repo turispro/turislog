@@ -3,8 +3,10 @@ package model
 import "time"
 
 type User struct {
-	Username string `json:"username"`
-	Id       string `json:"id,omitempty"`
+	Username   string `json:"username"`
+	Id         string `json:"id,omitempty"`
+	Sucursal   string `json:"sucursal,omitempty"`
+	SucursalId string `json:"sucursalId,omitempty"`
 }
 
 type Log struct {
