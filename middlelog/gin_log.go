@@ -53,10 +53,10 @@ func GinLogger() gin.HandlerFunc {
 		var body any
 		_ = json.NewDecoder(context.Request.Body).Decode(&body)
 		user := model.User{
-			Username:   context.GetHeader("X-Usuario-Nombre"),
-			Id:         context.GetHeader("X-Usuario-Id"),
-			Sucursal:   context.GetHeader("X-Sucursal-Nombre"),
-			SucursalId: context.GetHeader("X-Sucursal-Id"),
+			Username:         context.GetHeader("X-User-Name"),
+			Id:               context.GetHeader("X-User-Id"),
+			TourOperatorId:   context.GetHeader("X-Tour-Operator-Id"),
+			TourOperatorName: context.GetHeader("X-Tour-Operator-Name"),
 		}
 		register := model.Log{
 			Timestamp: time.Now(),
@@ -140,7 +140,7 @@ func sendMessage(message, level string, user *model.User) {
 func sendBodyToElastic(body string) {
 	id, _ := uuid.NewUUID()
 	req := esapi.IndexRequest{
-		Index:      "system-logs",
+		Index:      os.Getenv("ELASTICSEARCH_INDEX"),
 		DocumentID: id.String(),
 		Body:       strings.NewReader(body),
 		Refresh:    "true",

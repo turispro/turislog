@@ -3,10 +3,10 @@ package model
 import "time"
 
 type User struct {
-	Username   string `json:"username"`
-	Id         string `json:"id,omitempty"`
-	Sucursal   string `json:"sucursal,omitempty"`
-	SucursalId string `json:"sucursalId,omitempty"`
+	Username         string `json:"username"`
+	Id               string `json:"id,omitempty"`
+	TourOperatorName string `json:"tourOperatorName,omitempty"`
+	TourOperatorId   string `json:"tourOperatorId,omitempty"`
 }
 
 type Log struct {
