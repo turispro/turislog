@@ -15,7 +15,7 @@ type MongoBackend struct {
 }
 
 func (mb MongoBackend) Register(message model.Log) {
-	coll := client.Database("turispro_logs").Collection(os.Getenv("ELASTICSEARCH_INDEX"))
+	coll := client.Database("turispro").Collection(os.Getenv("ELASTICSEARCH_INDEX"))
 	if _, err := coll.InsertOne(context.TODO(), message); err != nil {
 		log.Println(err)
 	}
