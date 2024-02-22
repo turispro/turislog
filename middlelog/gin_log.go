@@ -1,18 +1,13 @@
 package middlelog
 
 import (
-	"context"
 	"encoding/json"
-	"github.com/elastic/go-elasticsearch/v7"
-	"github.com/elastic/go-elasticsearch/v7/esapi"
 	"github.com/gin-gonic/gin"
-	"github.com/google/uuid"
 	"github.com/joho/godotenv"
-	"github.com/turispro/turislog/elastic_client"
+	"github.com/turispro/turislog/internal/backend"
 	"github.com/turispro/turislog/model"
 	"log"
 	"os"
-	"strings"
 	"time"
 )
 
@@ -24,14 +19,10 @@ const (
 	FATAL        = "FATAL"
 )
 
-var client *elasticsearch.Client
-
 func init() {
 	if err := godotenv.Load(); err != nil {
 		log.Println(err)
 	}
-	log.Println("client elastic ")
-	client = elastic_client.Start()
 }
 
 func logLevel(status int) string {
@@ -74,8 +65,7 @@ func GinLogger() gin.HandlerFunc {
 				Status:       context.Writer.Status(),
 			},
 		}
-		jString, _ := json.Marshal(register)
-		go sendBodyToElastic(string(jString))
+		go sendToBackend(register)
 	}
 }
 
@@ -133,20 +123,10 @@ func sendMessage(message, level string, user *model.User) {
 		User:      logUser,
 		Message:   message,
 	}
-	body, _ := json.Marshal(register)
-	go sendBodyToElastic(string(body))
+	go sendToBackend(register)
 }
 
-func sendBodyToElastic(body string) {
-	id, _ := uuid.NewUUID()
-	req := esapi.IndexRequest{
-		Index:      os.Getenv("ELASTICSEARCH_INDEX"),
-		DocumentID: id.String(),
-		Body:       strings.NewReader(body),
-		Refresh:    "true",
-	}
-	_, err := req.Do(context.TODO(), client)
-	if err != nil {
-		log.Println("Error en request: ", err)
-	}
+func sendToBackend(message model.Log) {
+	be := backend.NewBackend(os.Getenv("BACKEND"))
+	be.Register(message)
 }
