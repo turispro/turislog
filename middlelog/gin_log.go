@@ -2,6 +2,7 @@ package middlelog
 
 import (
 	"encoding/json"
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
 	"github.com/turispro/turislog/internal/backend"
@@ -127,6 +128,7 @@ func sendMessage(message, level string, user *model.User) {
 }
 
 func sendToBackend(message model.Log) {
+	fmt.Println("backend", os.Getenv("BACKEND"))
 	be := backend.NewBackend(os.Getenv("BACKEND"))
 	be.Register(message)
 }
