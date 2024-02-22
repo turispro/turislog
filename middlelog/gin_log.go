@@ -20,10 +20,14 @@ const (
 	FATAL        = "FATAL"
 )
 
+var be backend.Backend
+
 func init() {
 	if err := godotenv.Load(); err != nil {
 		log.Println(err)
 	}
+	fmt.Println("backend", os.Getenv("BACKEND"))
+	be = backend.NewBackend(os.Getenv("BACKEND"))
 }
 
 func logLevel(status int) string {
@@ -128,7 +132,6 @@ func sendMessage(message, level string, user *model.User) {
 }
 
 func sendToBackend(message model.Log) {
-	fmt.Println("backend", os.Getenv("BACKEND"))
-	be := backend.NewBackend(os.Getenv("BACKEND"))
+
 	be.Register(message)
 }
