@@ -27,7 +27,7 @@ func NewMongoBackend() MongoBackend {
 }
 
 func start() *mongo.Client {
-	client, err := mongo.Connect(context.TODO(), options.Client().ApplyURI(os.Getenv("MONGODB_URI")))
+	client, err := mongo.Connect(context.TODO(), options.Client().ApplyURI(os.Getenv("MONGO_URI")))
 	if err != nil {
 		panic(err)
 	}
